@@ -1,0 +1,4 @@
+model,temperature,n_prompts,schema_valid_first_try_rate,json_valid_first_try_rate,final_success_rate,retry_success_rate,n_retried,quality_rate,avg_ttft_s,median_ttft_s,avg_total_latency_s,median_first_attempt_latency_s,avg_tokens_per_s,memory_mb
+mistral:7b,0.0,40,1.0,1.0,1.0,,0,0.875,2.19,2.188,3.376,3.306,27.1,5061
+llama3.2:3b,0.0,40,0.975,0.975,1.0,1.0,1,0.875,2.308,2.305,2.788,2.716,66.4,2555
+phi3.5:3.8b,0.0,40,0.0,0.0,0.0,,0,,,,,,,3800

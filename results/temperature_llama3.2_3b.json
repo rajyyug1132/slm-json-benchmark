@@ -1,0 +1,15 @@
+{
+  "model": "llama3.2:3b",
+  "runs": 3,
+  "subset": 10,
+  "temperatures": {
+    "0.0": {
+      "schema_valid_rate": 1.0,
+      "deterministic_prompt_rate": 1.0
+    },
+    "0.7": {
+      "schema_valid_rate": 0.8,
+      "deterministic_prompt_rate": 0.4
+    }
+  }
+}

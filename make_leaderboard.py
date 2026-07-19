@@ -1,0 +1,164 @@
+"""Generate leaderboard.html (and a markdown table) from results/*.json.
+
+Usage:
+    python make_leaderboard.py            # writes leaderboard.html
+    python make_leaderboard.py --markdown # prints markdown table for README
+Re-run after new benchmark runs; the page regenerates from whatever is in results/.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent / "benchmarks"))
+from compare import load_summaries  # noqa: E402
+
+ROOT = Path(__file__).resolve().parent
+
+
+def pct(v):
+    return f"{v:.0%}" if v is not None else "–"
+
+
+def num(v, suffix=""):
+    return f"{v}{suffix}" if v is not None else "–"
+
+
+def markdown_table(rows: list[dict]) -> str:
+    head = ("| # | Model | Temp | Schema valid (1st try) | Final success | Retry success "
+            "| Quality | Avg tok/s | Avg TTFT | Avg latency | Memory |\n"
+            "|---|-------|------|------------------------|---------------|---------------"
+            "|---------|-----------|----------|-------------|--------|")
+    lines = [head]
+    for i, r in enumerate(rows, 1):
+        lines.append(
+            f"| {i} | `{r['model']}` | {r['temperature']} | {pct(r['schema_valid_first_try_rate'])} "
+            f"| {pct(r['final_success_rate'])} | {pct(r['retry_success_rate'])} "
+            f"| {pct(r['quality_rate'])} | {num(r['avg_tokens_per_s'])} "
+            f"| {num(r['avg_ttft_s'], 's')} | {num(r['avg_total_latency_s'], 's')} "
+            f"| {num(r['memory_mb'], ' MB')} |"
+        )
+    return "\n".join(lines)
+
+
+def html_page(rows: list[dict]) -> str:
+    trs = []
+    for i, r in enumerate(rows, 1):
+        trs.append(
+            "<tr>"
+            f"<td class='rank'>{i}</td><td class='model'>{r['model']}</td>"
+            f"<td>{r['temperature']}</td>"
+            f"<td class='hero'>{pct(r['schema_valid_first_try_rate'])}</td>"
+            f"<td>{pct(r['final_success_rate'])}</td>"
+            f"<td>{pct(r['retry_success_rate'])}</td>"
+            f"<td>{pct(r['quality_rate'])}</td>"
+            f"<td>{num(r['avg_tokens_per_s'])}</td>"
+            f"<td>{num(r['avg_ttft_s'], 's')}</td>"
+            f"<td>{num(r['avg_total_latency_s'], 's')}</td>"
+            f"<td>{num(r['memory_mb'], ' MB')}</td>"
+            "</tr>"
+        )
+    n_prompts = rows[0]["n_prompts"] if rows else 0
+    stamp = max((r.get("timestamp") or "" for r in rows), default="")
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SLM JSON Benchmark — Leaderboard</title>
+<style>
+  :root {{
+    --bg: #f6f7f9; --card: #ffffff; --ink: #1b2430; --muted: #5c6773;
+    --line: #e3e7ec; --accent: #2563eb; --accent-soft: #eff4ff;
+  }}
+  @media (prefers-color-scheme: dark) {{
+    :root {{ --bg: #10151c; --card: #1a212b; --ink: #e7ecf2; --muted: #93a1b0;
+             --line: #2a3441; --accent: #7aa5ff; --accent-soft: #1e2a42; }}
+  }}
+  * {{ box-sizing: border-box; margin: 0; }}
+  body {{ background: var(--bg); color: var(--ink);
+         font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; padding: 2.5rem 1rem; }}
+  main {{ max-width: 68rem; margin: 0 auto; }}
+  h1 {{ font-size: 1.7rem; letter-spacing: -0.02em; }}
+  p.sub {{ color: var(--muted); margin: 0.4rem 0 1.6rem; }}
+  .tablewrap {{ overflow-x: auto; background: var(--card); border: 1px solid var(--line);
+                border-radius: 12px; }}
+  table {{ border-collapse: collapse; width: 100%; min-width: 56rem; font-size: 0.92rem; }}
+  th, td {{ padding: 0.65rem 0.9rem; text-align: right; white-space: nowrap; }}
+  th {{ color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase;
+       letter-spacing: 0.04em; border-bottom: 1px solid var(--line); cursor: pointer; }}
+  th:hover {{ color: var(--accent); }}
+  td {{ border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }}
+  tr:last-child td {{ border-bottom: none; }}
+  td.rank {{ color: var(--muted); }}
+  td.model, th:nth-child(2) {{ text-align: left; font-weight: 600; }}
+  td.hero {{ color: var(--accent); font-weight: 700; background: var(--accent-soft); }}
+  footer {{ color: var(--muted); font-size: 0.82rem; margin-top: 1.2rem; }}
+</style>
+</head>
+<body>
+<main>
+  <h1>SLM JSON Benchmark</h1>
+  <p class="sub">Schema-enforced JSON reliability of local 3–7B models via Ollama ·
+     {n_prompts} prompts · ranked by first-try schema validity · updated {stamp}</p>
+  <div class="tablewrap">
+  <table id="lb">
+    <thead><tr>
+      <th>#</th><th>Model</th><th>Temp</th><th>Schema valid (1st try)</th>
+      <th>Final success</th><th>Retry success</th><th>Quality</th>
+      <th>Avg tok/s</th><th>Avg TTFT</th><th>Avg latency</th><th>Memory</th>
+    </tr></thead>
+    <tbody>
+    {''.join(trs)}
+    </tbody>
+  </table>
+  </div>
+  <footer>Click a column header to sort. Generated by <code>make_leaderboard.py</code>
+    from <code>results/*.json</code>. Hardware-dependent: all rows measured on the same machine.</footer>
+</main>
+<script>
+document.querySelectorAll("#lb th").forEach((th, idx) => th.addEventListener("click", () => {{
+  const tb = document.querySelector("#lb tbody");
+  const rows = [...tb.rows];
+  const asc = th.dataset.asc !== "1";
+  document.querySelectorAll("#lb th").forEach(h => delete h.dataset.asc);
+  th.dataset.asc = asc ? "1" : "0";
+  const val = tr => {{
+    const t = tr.cells[idx].textContent.trim().replace(/[%s,MB\\u2013 ]+$/g, "");
+    const n = parseFloat(t);
+    return isNaN(n) ? tr.cells[idx].textContent.trim().toLowerCase() : n;
+  }};
+  rows.sort((a, b) => {{
+    const x = val(a), y = val(b);
+    return (x < y ? -1 : x > y ? 1 : 0) * (asc ? 1 : -1);
+  }});
+  rows.forEach(r => tb.appendChild(r));
+}})));
+</script>
+</body>
+</html>
+"""
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--markdown", action="store_true", help="print markdown table instead")
+    args = ap.parse_args()
+
+    rows = load_summaries()
+    if not rows:
+        print("no results in results/ — run benchmarks first", file=sys.stderr)
+        return 1
+    if args.markdown:
+        print(markdown_table(rows))
+        return 0
+    out = ROOT / "leaderboard.html"
+    out.write_text(html_page(rows), encoding="utf-8")
+    print(f"wrote {out} ({len(rows)} rows)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

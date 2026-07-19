@@ -1,0 +1,40 @@
+{"id": "qa-01", "category": "factual-qa", "prompt": "What is the capital of Japan?", "expect_any": ["tokyo"]}
+{"id": "qa-02", "category": "factual-qa", "prompt": "What planet is known as the Red Planet?", "expect_any": ["mars"]}
+{"id": "qa-03", "category": "factual-qa", "prompt": "Who wrote the play Romeo and Juliet?", "expect_any": ["shakespeare"]}
+{"id": "qa-04", "category": "factual-qa", "prompt": "What is the chemical symbol for gold?", "expect_any": ["au"]}
+{"id": "qa-05", "category": "factual-qa", "prompt": "How many continents are there on Earth?", "expect_any": ["7", "seven"]}
+{"id": "qa-06", "category": "factual-qa", "prompt": "What is the largest ocean on Earth?", "expect_any": ["pacific"]}
+{"id": "qa-07", "category": "factual-qa", "prompt": "In which year did World War II end?", "expect_any": ["1945"]}
+{"id": "qa-08", "category": "factual-qa", "prompt": "What gas do plants primarily absorb from the atmosphere for photosynthesis?", "expect_any": ["carbon dioxide", "co2"]}
+{"id": "qa-09", "category": "factual-qa", "prompt": "What is the tallest mountain above sea level?", "expect_any": ["everest"]}
+{"id": "qa-10", "category": "factual-qa", "prompt": "Which language has the most native speakers worldwide?", "expect_any": ["mandarin", "chinese"]}
+{"id": "math-01", "category": "math", "prompt": "What is 17 multiplied by 23?", "expect_any": ["391"]}
+{"id": "math-02", "category": "math", "prompt": "What is 15% of 240?", "expect_any": ["36"]}
+{"id": "math-03", "category": "math", "prompt": "If a train travels 60 km in 45 minutes, what is its speed in km/h?", "expect_any": ["80"]}
+{"id": "math-04", "category": "math", "prompt": "What is the square root of 169?", "expect_any": ["13"]}
+{"id": "math-05", "category": "math", "prompt": "A shirt costs 40 dollars after a 20% discount. What was the original price in dollars?", "expect_any": ["50"]}
+{"id": "math-06", "category": "math", "prompt": "What is 2 to the power of 10?", "expect_any": ["1024"]}
+{"id": "math-07", "category": "math", "prompt": "What is the sum of the interior angles of a triangle in degrees?", "expect_any": ["180"]}
+{"id": "math-08", "category": "math", "prompt": "If you divide 144 by 12 and then add 8, what do you get?", "expect_any": ["20"]}
+{"id": "cls-01", "category": "classification", "prompt": "Classify the sentiment of this review as positive, negative, or neutral: 'The battery died within two hours and support never replied.'", "expect_any": ["negative"]}
+{"id": "cls-02", "category": "classification", "prompt": "Classify the sentiment of this review as positive, negative, or neutral: 'Absolutely love it, best purchase I made this year!'", "expect_any": ["positive"]}
+{"id": "cls-03", "category": "classification", "prompt": "Is this email spam or not spam? 'CONGRATULATIONS! You won a FREE iPhone, click here NOW to claim your prize!!!'", "expect_any": ["spam"]}
+{"id": "cls-04", "category": "classification", "prompt": "Classify this animal as mammal, bird, reptile, or fish: penguin.", "expect_any": ["bird"]}
+{"id": "cls-05", "category": "classification", "prompt": "Classify this programming language as compiled or interpreted (as typically used): Python.", "expect_any": ["interpreted"]}
+{"id": "cls-06", "category": "classification", "prompt": "Is the number 97 prime or composite?", "expect_any": ["prime"]}
+{"id": "cls-07", "category": "classification", "prompt": "Classify this text's topic as sports, politics, or technology: 'The new GPU delivers twice the performance of last year's flagship.'", "expect_any": ["tech"]}
+{"id": "cls-08", "category": "classification", "prompt": "Classify the tone of this message as formal or informal: 'hey wanna grab lunch later??'", "expect_any": ["informal"]}
+{"id": "ext-01", "category": "extraction", "prompt": "Extract the email address from this text: 'Contact our support team at help@example.com for assistance.'", "expect_any": ["help@example.com"]}
+{"id": "ext-02", "category": "extraction", "prompt": "Extract the year from this sentence: 'The company was founded in 1998 in a small garage.'", "expect_any": ["1998"]}
+{"id": "ext-03", "category": "extraction", "prompt": "Extract the person's name from: 'Yesterday, Dr. Maria Santos presented her research on coral reefs.'", "expect_any": ["maria santos"]}
+{"id": "ext-04", "category": "extraction", "prompt": "Extract the price from this listing: 'Vintage lamp in great condition, asking $75 or best offer.'", "expect_any": ["75"]}
+{"id": "ext-05", "category": "extraction", "prompt": "Extract the city name from: 'The conference will be held in Barcelona next spring.'", "expect_any": ["barcelona"]}
+{"id": "ext-06", "category": "extraction", "prompt": "Extract the phone number from: 'Call us at 555-0142 during business hours.'", "expect_any": ["555-0142"]}
+{"id": "ext-07", "category": "extraction", "prompt": "Extract the programming language mentioned in: 'We rewrote the backend in Rust for better memory safety.'", "expect_any": ["rust"]}
+{"id": "ext-08", "category": "extraction", "prompt": "Extract the date from: 'The invoice is due on March 15, 2025.'", "expect_any": ["march 15", "2025-03-15", "15 march"]}
+{"id": "rsn-01", "category": "reasoning", "prompt": "Summarize in one sentence why exercise is good for cardiovascular health.", "expect_any": ["heart"]}
+{"id": "rsn-02", "category": "reasoning", "prompt": "If all cats are mammals and all mammals are animals, are all cats animals? Answer yes or no with a brief reason.", "expect_any": ["yes"]}
+{"id": "rsn-03", "category": "reasoning", "prompt": "Which is heavier: a kilogram of feathers or a kilogram of steel?", "expect_any": ["same", "equal", "neither"]}
+{"id": "rsn-04", "category": "reasoning", "prompt": "Tom is taller than Sam. Sam is taller than Rita. Who is the shortest?", "expect_any": ["rita"]}
+{"id": "rsn-05", "category": "reasoning", "prompt": "Summarize in one sentence what version control software like git is for.", "expect_any": ["change", "history", "track", "collaborat"]}
+{"id": "rsn-06", "category": "reasoning", "prompt": "A farmer has 17 sheep and all but 9 run away. How many sheep are left?", "expect_any": ["9", "nine"]}

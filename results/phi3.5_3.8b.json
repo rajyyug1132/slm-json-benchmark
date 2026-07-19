@@ -1,0 +1,22 @@
+{
+  "summary": {
+    "model": "phi3.5:3.8b",
+    "temperature": 0.0,
+    "n_prompts": 40,
+    "schema_valid_first_try_rate": 0.0,
+    "json_valid_first_try_rate": 0.0,
+    "final_success_rate": 0.0,
+    "retry_success_rate": null,
+    "n_retried": 0,
+    "quality_rate": null,
+    "avg_ttft_s": null,
+    "median_ttft_s": null,
+    "avg_total_latency_s": null,
+    "median_first_attempt_latency_s": null,
+    "avg_tokens_per_s": null,
+    "memory_bytes": {"size": 3800000000, "size_vram": 3800000000},
+    "timestamp": "2026-07-19T17:05:00",
+    "status": "FAILED: warm-up generation stalled >6 min with model loaded on GPU; run killed by watchdog. Recorded as timeout, not debugged (per benchmark policy: failures are data)."
+  },
+  "records": []
+}
