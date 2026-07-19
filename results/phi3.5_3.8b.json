@@ -16,7 +16,7 @@
     "avg_tokens_per_s": null,
     "memory_bytes": {"size": 3800000000, "size_vram": 3800000000},
     "timestamp": "2026-07-19T17:05:00",
-    "status": "FAILED: warm-up generation stalled >6 min with model loaded on GPU; run killed by watchdog. Recorded as timeout, not debugged (per benchmark policy: failures are data)."
+    "status": "FAILED: warm-up generation stalled indefinitely with model loaded on GPU; killed by watchdog. Reproduced on retry (15-min budget, stalled at warm-up both runs). Recorded as timeout, not debugged (per benchmark policy: failures are data)."
   },
   "records": []
 }

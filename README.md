@@ -27,7 +27,7 @@ If you build anything on top of a local model — a CLI tool, an API, an agent �
 | 2 | `llama3.2:3b` | 0.0 | 98% | 100% | 100% | 88% | 66.4 | 2.308s | 2.788s | 2555 MB |
 | 3 | `phi3.5:3.8b` | 0.0 | 0% | 0% | – | – | – | – | – | 3800 MB |
 
-> `phi3.5:3.8b` is a **failure row**, not a low score: its warm-up generation stalled indefinitely with the model loaded on GPU and was killed by a watchdog after 6+ minutes. Per benchmark policy, model failures are recorded as data, not debugged.
+> `phi3.5:3.8b` is a **failure row**, not a low score: its warm-up generation stalled indefinitely with the model loaded on GPU and was killed by a watchdog — twice, including a retry with a 15-minute budget. Per benchmark policy, model failures are recorded as data, not debugged.
 >
 > Notable trade-off: `llama3.2:3b` is ~2.5× faster and half the memory of `mistral:7b` for the same 88% answer quality — mistral's edge is a perfect 40/40 first-try schema record vs llama's 39/40 (recovered on retry #1).
 
