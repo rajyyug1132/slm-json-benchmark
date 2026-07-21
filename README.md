@@ -17,7 +17,7 @@ If you build anything on top of a local model — a CLI tool, an API, an agent �
 
 - **Schema validity (first try)** — the headline metric: fraction of responses that parse as JSON *and* pass strict [Pydantic validation](slm_app/schema.py) with no help.
 - **Retry success** — when the first attempt fails, we feed the validation error back and reprompt (max 2 retries). This measures whether a model can self-correct.
-- **Quality** — of the schema-valid answers, how many are actually right (case-insensitive expected-substring match).
+- **Quality** — of the schema-valid answers, how many are actually right. Each prompt carries an `expect_any` list; a match requires the expected string at a **word boundary** (a plain substring test would let "au" match inside "because"). The boundary is required before the expectation but not after, so prefix expectations like "tech" still match "technology".
 - **Speed** — time-to-first-token, total latency, tokens/sec (from Ollama's own `eval_count`/`eval_duration` counters).
 - **Memory** — model footprint from Ollama's `/api/ps`.
 
@@ -25,15 +25,32 @@ If you build anything on top of a local model — a CLI tool, an API, an agent �
 
 | # | Model | Temp | Schema valid (1st try) | Final success | Retry success | Quality | Avg tok/s | Avg TTFT | Avg latency | Memory |
 |---|-------|------|------------------------|---------------|---------------|---------|-----------|----------|-------------|--------|
-| 1 | `mistral:7b` | 0.0 | 100% | 100% | – | 88% | 27.1 | 2.19s | 3.376s | 5061 MB |
-| 2 | `llama3.2:3b` | 0.0 | 98% | 100% | 100% | 88% | 66.4 | 2.308s | 2.788s | 2555 MB |
+| 1 | `mistral:7b` | 0.0 | 100% | 100% | – | 88% | 24.4 | 2.287s | 3.604s | 5061 MB |
+| 2 | `llama3.2:3b` | 0.0 | 98% | 100% | 100% | 88% | 68.2 | 2.804s | 3.284s | 2555 MB |
 | 3 | `phi3.5:3.8b` | 0.0 | 0% | 0% | – | – | – | – | – | 3800 MB |
 
 > `phi3.5:3.8b` is a **failure row**, not a low score: its warm-up generation stalled indefinitely with the model loaded on GPU and was killed by a watchdog — twice, including a retry with a 15-minute budget. Per benchmark policy, model failures are recorded as data, not debugged.
 >
-> Notable trade-off: `llama3.2:3b` is ~2.5× faster and half the memory of `mistral:7b` for the same 88% answer quality — mistral's edge is a perfect 40/40 first-try schema record vs llama's 39/40 (recovered on retry #1).
+> Notable trade-off: `llama3.2:3b` is ~2.8× faster and half the memory of `mistral:7b` for the same 88% answer quality — mistral's edge is a perfect 40/40 first-try schema record vs llama's 39/40 (recovered on retry #1).
 
 *All rows measured on the same machine (Windows 11, Ollama). Ranked by first-try schema validity, ties broken by latency. Regenerate with `python make_leaderboard.py --markdown`.*
+
+**Throughput varies between runs.** Two full runs of the same suite on the same machine put llama3.2's advantage at 2.5× and 2.8× (66.4 vs 27.1, then 68.2 vs 24.4 tok/s). Schema validity, quality, and memory were stable across both. Treat the tok/s column as approximate unless you average several runs.
+
+### Where the answers actually fail
+
+The aggregate 88%-vs-88% tie hides that the two models are good at *different things*:
+
+| Model | classification | extraction | factual-qa | math | reasoning |
+|-------|----------------|------------|------------|------|-----------|
+| `llama3.2:3b` | 75% | 100% | 100% | **88%** | 67% |
+| `mistral:7b` | 88% | 100% | 100% | **62%** | 83% |
+
+Two things stand out. First, `mistral:7b` — more than twice the size — is markedly *worse* at math (62% vs 88%), while `llama3.2:3b` is weaker at reasoning (67% vs 83%). Picking on the headline number alone would hide that entirely; if your workload is arithmetic-heavy, the smaller model is the better choice on both quality and speed.
+
+Second, **schema validity is nearly flat across categories at 100%** — the single first-try schema failure in the whole suite (llama3.2, math, 88% valid) was the lone exception. Structural compliance and answer correctness are independent axes: a model can be reliably parseable and reliably wrong.
+
+Per-category numbers are written to `results/by_category.csv` by `compare.py`.
 
 ## Methodology
 

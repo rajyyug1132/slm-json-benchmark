@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import statistics
 import sys
 import time
@@ -31,6 +32,18 @@ def slug(model: str) -> str:
     return model.replace(":", "_").replace("/", "_")
 
 
+def matches_expectation(answer: str, expect_any: list[str]) -> bool:
+    """True if any expected string appears in the answer at a word boundary.
+
+    A plain substring test is too lenient: "au" (gold) matches inside "because",
+    "9" matches inside "19". We require a word boundary before the expectation
+    but deliberately not after it, so prefix expectations still work as intended
+    ("tech" matching "technology", "collaborat" matching "collaboration").
+    """
+    low = answer.lower()
+    return any(re.search(r"\b" + re.escape(exp.lower()), low) for exp in expect_any)
+
+
 def run(model: str, temperature: float) -> dict:
     prompts = [json.loads(line) for line in PROMPTS.read_text(encoding="utf-8").splitlines() if line.strip()]
     records = []
@@ -46,8 +59,7 @@ def run(model: str, temperature: float) -> dict:
         first = r.attempts[0]
         quality = None
         if r.ok and p.get("expect_any"):
-            ans = r.response.answer.lower()
-            quality = any(exp.lower() in ans for exp in p["expect_any"])
+            quality = matches_expectation(r.response.answer, p["expect_any"])
         rec = {
             "id": p["id"],
             "category": p["category"],
@@ -61,6 +73,8 @@ def run(model: str, temperature: float) -> dict:
             "tokens_per_s": round(first.tokens_per_s, 2) if first.tokens_per_s else None,
             "eval_tokens": first.eval_count,
             "quality_pass": quality,
+            # kept so scoring can be revised without re-running the whole suite
+            "answer": r.response.answer if r.ok else None,
             "error": None if r.ok else r.attempts[-1].error,
         }
         records.append(rec)

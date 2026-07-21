@@ -1,0 +1,11 @@
+model,category,n_prompts,schema_valid_first_try_rate,quality_rate
+llama3.2:3b,classification,8,1.0,0.75
+llama3.2:3b,extraction,8,1.0,1.0
+llama3.2:3b,factual-qa,10,1.0,1.0
+llama3.2:3b,math,8,0.875,0.875
+llama3.2:3b,reasoning,6,1.0,0.6667
+mistral:7b,classification,8,1.0,0.875
+mistral:7b,extraction,8,1.0,1.0
+mistral:7b,factual-qa,10,1.0,1.0
+mistral:7b,math,8,1.0,0.625
+mistral:7b,reasoning,6,1.0,0.8333
