@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>slm-json-benchmark — social card</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d0d0d; display: grid; place-items: center; min-height: 100vh;
+         font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+  .card {
+    width: 1200px; height: 627px; background: #1a1a19; color: #ffffff;
+    padding: 52px 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px;
+    --series-1: #3987e5;   /* llama3.2:3b  — categorical slot 1 */
+    --series-2: #008300;   /* mistral:7b   — categorical slot 2 */
+    --ink-2: #c3c2b7; --muted: #898781; --rule: #2c2c2a;
+  }
+
+  .eyebrow { font-size: 15px; letter-spacing: .12em; text-transform: uppercase;
+             color: var(--muted); font-weight: 600; }
+  h1 { font-size: 46px; line-height: 1.12; letter-spacing: -.025em; margin-top: 18px; font-weight: 700; }
+  h1 em { font-style: normal; color: var(--series-1); }
+  .sub { color: var(--ink-2); font-size: 19px; line-height: 1.5; margin-top: 20px; max-width: 30ch; }
+  .foot { margin-top: auto; font-size: 15px; color: var(--muted); }
+  .foot b { color: var(--ink-2); font-weight: 600; }
+  .left { display: flex; flex-direction: column; }
+
+  .legend { display: flex; gap: 20px; font-size: 15px; color: var(--ink-2); margin-bottom: 26px; }
+  .legend span { display: flex; align-items: center; gap: 8px; }
+  .dot { width: 11px; height: 11px; border-radius: 3px; }
+
+  .metric + .metric { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  .label { font-size: 14px; color: var(--muted); text-transform: uppercase;
+           letter-spacing: .07em; font-weight: 600; margin-bottom: 12px; }
+  .row { display: flex; align-items: center; gap: 12px; margin-top: 7px; }
+  .bar { height: 15px; border-radius: 0 4px 4px 0; }
+  .val { font-size: 15px; color: #fff; font-weight: 600; white-space: nowrap; }
+  .win { font-size: 13px; color: var(--muted); margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="left">
+    <div class="eyebrow">slm-json-benchmark</div>
+    <h1>Same answer quality.<br><em>2.5× the speed.</em><br>Half the memory.</h1>
+    <p class="sub">A 3-billion-parameter model matched a 7B model on 40 structured-output
+       tasks — running fully offline on one laptop.</p>
+    <div class="foot">
+      40 prompts &nbsp;·&nbsp; schema-validated JSON &nbsp;·&nbsp; temperature 0<br>
+      <b>rajyyug1132.github.io/slm-json-benchmark</b>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="legend">
+      <span><i class="dot" style="background:var(--series-1)"></i> llama3.2:3b</span>
+      <span><i class="dot" style="background:var(--series-2)"></i> mistral:7b</span>
+    </div>
+
+    <div class="metric">
+      <div class="label">Answer quality</div>
+      <div class="row"><div class="bar" style="width:340px;background:var(--series-1)"></div><span class="val">88%</span></div>
+      <div class="row"><div class="bar" style="width:340px;background:var(--series-2)"></div><span class="val">88%</span></div>
+      <div class="win">Tied — 35 of 40 correct each</div>
+    </div>
+
+    <div class="metric">
+      <div class="label">Generation speed</div>
+      <div class="row"><div class="bar" style="width:340px;background:var(--series-1)"></div><span class="val">66.4 tok/s</span></div>
+      <div class="row"><div class="bar" style="width:139px;background:var(--series-2)"></div><span class="val">27.1 tok/s</span></div>
+      <div class="win">llama3.2 is 2.5× faster</div>
+    </div>
+
+    <div class="metric">
+      <div class="label">Memory footprint</div>
+      <div class="row"><div class="bar" style="width:172px;background:var(--series-1)"></div><span class="val">2.6 GB</span></div>
+      <div class="row"><div class="bar" style="width:340px;background:var(--series-2)"></div><span class="val">5.1 GB</span></div>
+      <div class="win">mistral needs 2× the RAM</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

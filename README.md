@@ -5,6 +5,8 @@
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
 ![Ollama](https://img.shields.io/badge/runtime-Ollama-white)
 
+![Same answer quality, 2.5x the speed, half the memory](assets/social_card.png)
+
 Benchmarks how reliably small language models (3–7B) running **fully offline via [Ollama](https://ollama.com)** produce **schema-valid JSON** — plus the speed and memory cost of getting it.
 
 **Live leaderboard:** [leaderboard.html](https://rajyyug1132.github.io/slm-json-benchmark/leaderboard.html)
